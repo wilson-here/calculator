@@ -1,17 +1,43 @@
 import { useState } from "react";
 import "./styles/App.scss";
 import CopyRight from "./components/CopyRight";
-import { handleClick } from "./utils/eventHandlers";
+// import { handleInput } from "./utils/eventHandlers";
 import { manipulators, numbers } from "./constants/btns";
 
 function App() {
+  const [input, setInput] = useState("");
   const [result, setResult] = useState(0);
+
+  const handleInput = (value) => {
+    if (input.endsWith(".") && value === ".") {
+      return;
+    } else if (input.endsWith("=") && "+-*/".includes(value)) {
+      setInput(result + value);
+    } else {
+      setInput((prevInput) => prevInput + value);
+    }
+  };
+
+  const calculate = () => {
+    try {
+      setResult(eval(input));
+    } catch (error) {
+      console.log("An error occured: ", error);
+      setResult("Error!!!");
+    }
+  };
+
+  const clear = () => {
+    setInput("");
+    setResult(0);
+  };
+
   return (
     <>
       <div className="cal">
         <div className="cal__scr">
-          <div className="cal__scr-formula"></div>
-          <div id="display" className="cal__scr-output">
+          <div className="cal__scr-input">{input}</div>
+          <div id="display" className="cal__scr-result">
             {result}
           </div>
         </div>
@@ -19,10 +45,12 @@ function App() {
           {/* manipulator */}
           {manipulators.map((manipulator) => (
             <button
-              className="cal__ctrl-btn"
+              className="cal__ctrl-btn cal__ctrl-man"
               key={manipulator.id}
               id={manipulator.id}
-              onClick={() => manipulator.cb(setResult)}
+              onClick={() => {
+                handleInput(manipulator.value);
+              }}
             >
               {manipulator.value}
             </button>
@@ -31,14 +59,33 @@ function App() {
           {/* numbers */}
           {numbers.map((num) => (
             <button
-              className="cal__ctrl-btn"
+              className="cal__ctrl-btn cal__ctrl-num"
               key={num.id}
               id={num.id}
-              onClick={(e) => handleClick(e, result, setResult)}
+              onClick={() => {
+                handleInput(num.value.toString());
+              }}
             >
               {num.value}
             </button>
           ))}
+
+          {/* calculate */}
+          <button
+            className="cal__ctrl-btn cal__ctrl-man"
+            id="equals"
+            onClick={calculate}
+          >
+            =
+          </button>
+          {/* clear */}
+          <button
+            className="cal__ctrl-btn cal__ctrl-man"
+            id="clear"
+            onClick={clear}
+          >
+            AC
+          </button>
         </div>
       </div>
       <CopyRight />

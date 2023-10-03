@@ -1,13 +1,3 @@
-import {
-  add,
-  subtract,
-  multiply,
-  divide,
-  equals,
-  decimal,
-  clear,
-} from "../utils/eventHandlers";
-
 export const numbers = [
   { value: 0, id: "zero" },
   { value: 1, id: "one" },
@@ -22,11 +12,9 @@ export const numbers = [
 ];
 
 export const manipulators = [
-  { value: "+", id: "add", cb: add },
-  { value: "-", id: "subtract", cb: subtract },
-  { value: "x", id: "multiply", cb: multiply },
-  { value: "/", id: "divide", cb: divide },
-  { value: "=", id: "equals", cb: equals },
-  { value: ".", id: "decimal", cb: decimal },
-  { value: "AC", id: "clear", cb: clear },
+  { value: "+", id: "add" },
+  { value: "-", id: "subtract" },
+  { value: "*", id: "multiply" },
+  { value: "/", id: "divide" },
+  { value: ".", id: "decimal" },
 ];

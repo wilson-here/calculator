@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+// var
+$orange: #fa9c16;
+$grey: #6d6c6d;
+
 // mixins
 @mixin bp($name) {
   @if $name == sm {
@@ -54,23 +58,21 @@ button {
 // main
 html {
   overflow: hidden;
+  font-family: "Roboto", sans-serif;
 }
 
 #root {
   height: 100vh;
   background-color: darkgrey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cal {
-  width: 90%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
   background-color: cadetblue;
   position: relative;
-  top: calc(50% - 25px);
-  transform: translateY(-50%);
   padding: 2rem;
   border-radius: 10px;
   @include bp(sm) {
@@ -82,45 +84,95 @@ html {
   &__scr {
     width: 100%;
     height: 4rem;
-    background-color: slategray;
+    background-color: white;
     display: flex;
     flex-direction: column;
-    &-formula,
-    &-output {
-      height: 50%;
+    &-input,
+    &-result {
       text-align: end;
+      font-size: 2rem;
+      padding: 0.5rem;
     }
   }
   &__ctrl {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-areas:
+      "clear clear divide multiply"
+      "seven eight nine subtract"
+      "four five six add"
+      "one two three equals"
+      "zero zero decimal equals";
+    gap: 0.5rem;
+    margin-top: 1rem;
     &-btn {
-      padding: 2rem;
+      min-width: 5rem;
+      min-height: 5rem;
+      cursor: pointer;
+      border-radius: 100px;
+      transition: transform 0.05s ease-in-out;
+      border: none;
+      color: white;
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    &-man {
+      background-color: $orange;
+    }
+    &-num {
+      background-color: $grey;
     }
     #clear {
-      grid-area: 1/1/2/3;
+      grid-area: clear;
     }
     #divide {
-      grid-area: 1/3;
+      grid-area: divide;
     }
     #multiply {
-      grid-area: 1/4;
+      grid-area: multiply;
     }
     #subtract {
-      grid-area: 2/4;
+      grid-area: subtract;
     }
     #add {
-      grid-area: 3/4;
+      grid-area: add;
     }
     #equals {
-      grid-area: 4/4/6/5;
+      grid-area: equals;
     }
     #decimal {
-      grid-area: 5/3;
+      grid-area: decimal;
     }
     #zero {
-      grid-area: 5/1/6/3;
+      grid-area: zero;
+    }
+    #one {
+      grid-area: one;
+    }
+    #two {
+      grid-area: two;
+    }
+    #three {
+      grid-area: three;
+    }
+    #four {
+      grid-area: four;
+    }
+    #five {
+      grid-area: five;
+    }
+    #six {
+      grid-area: six;
+    }
+    #seven {
+      grid-area: seven;
+    }
+    #eight {
+      grid-area: eight;
+    }
+    #nine {
+      grid-area: nine;
     }
   }
 }
