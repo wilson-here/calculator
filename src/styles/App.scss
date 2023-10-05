@@ -116,6 +116,7 @@ html {
       transition: transform 0.05s ease-in-out;
       border: none;
       color: white;
+      font-size: 1.2rem;
       @include bp(md) {
         min-width: 3rem;
         min-height: 3rem;
