@@ -75,7 +75,7 @@ function App() {
 
       // no 2 decimal in a number block
       if (flagMultipleDecimal === true) {
-        return (prevExpression + value).replace(/^0+|[-+*/]0+/, "");
+        return prevExpression;
       }
       //  3 operator
       if (/[-+*/]-$/.test(prevExpression) && value === "-") {
