@@ -75,6 +75,9 @@ html {
   position: relative;
   padding: 2rem;
   border-radius: 10px;
+  @include bp(md) {
+    padding: 1rem;
+  }
   @include bp(sm) {
     max-width: 400px;
     flex-direction: column-reverse;
@@ -117,6 +120,10 @@ html {
       transition: transform 0.05s ease-in-out;
       border: none;
       color: white;
+      @include bp(md) {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+      }
       &:active {
         transform: scale(0.95);
       }

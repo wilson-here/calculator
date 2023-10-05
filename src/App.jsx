@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./styles/App.scss";
 import CopyRight from "./components/CopyRight";
-// import { handleExpression } from "./utils/eventHandlers";
 import { manipulators, numbers } from "./constants/btns";
 
 function App() {
@@ -9,66 +8,118 @@ function App() {
   const [input, setInput] = useState(0);
   const [inputBlock, setInputBlock] = useState("");
   const [result, setResult] = useState(0);
-
+  let flagMultipleDecimal = false;
+  let flagMultipleZero = false;
   const handleInput = (value) => {
-    setInput((prevInput) => {
-      // if (
-      //   /[\d.]/.test(value) &&
-      //   ((prevInput == 0 && value != 0) || /[1-9]/.test(prevInput))
-      // ) {
-      //   console.log("haha");
-
-      //   setInputBlock(inputBlock.concat(value));
-      // } else if (inputBlock.includes(".") && value === ".") {
-      //   // return value;
-      // } else if (
-      //   (/\d/.test(prevInput) && /[-+*/]/.test(value)) ||
-      //   /[-+*/]/.test(prevInput)
-      // ) {
-      //   setInputBlock(value);
-      // } else if (prevInput == 0 && value == "0") {
-      //   setExpression(0);
-      //   setInputBlock(0);
-      //   return value;
-      // } else if (value === "=") {
-      //   return value;
-      // } else {
-      //   return;
-      // }
-
-      // update inputBlock to see input number in the id of 'display'
-      // 10. When inputting numbers, my calculator should not allow a number to begin with multiple zeros.
-      // 11. When the decimal element is clicked, a "." should append to the currently displayed value; two "." in one number should not be accepted
-      if (/^0/.test(inputBlock) && value == 0) {
-        setInputBlock(inputBlock.slice(0, 1));
-        setExpression(expression.slice(0, 1));
-      } else if (
-        /\./g.test(inputBlock) &&
-        /\./g.test(expression) &&
-        value == "."
-      ) {
-        console.log("haha");
-        // setInputBlock(inputBlock.slice(0, -1));
-        // setExpression(expression.slice(0, -1));
-        return;
-      } else {
-        setInputBlock(inputBlock.concat(value));
+    setInput(value);
+    setInputBlock((prevInBlock) => {
+      // no operator before input number, exclude subtract
+      if (prevInBlock === "" && /[+*/]/.test(value)) {
+        return "";
       }
-      return value;
+
+      // allow number block
+      if (
+        !/^0+/.test(prevInBlock) &&
+        /\d$/.test(prevInBlock) &&
+        /\d/.test(value)
+      ) {
+        return prevInBlock + value;
+      }
+      // no input block begin with multiple zero
+      if (/^0/.test(prevInBlock) && value == 0) {
+        flagMultipleZero = true;
+        return 0;
+      }
+      if (/^0/.test(prevInBlock) && value != 0) {
+        flagMultipleZero = true;
+        return (prevInBlock + value).replace(/^0+/, "");
+      }
+      // no 2 decimal in a number block
+      if (prevInBlock.includes(".") && value === ".") {
+        flagMultipleDecimal = true;
+        return prevInBlock;
+      }
+
+      // seperate operator and number block / decimal number block
+      if (
+        (/\d$/.test(prevInBlock) && /[-+*/]/.test(value)) ||
+        (/[-+*/]$/.test(prevInBlock) && /[\d.]/.test(value))
+      ) {
+        return value;
+      }
+
+      // only 1 operator allow in one input block
+      if (/[-+*/]$/.test(prevInBlock) && /[-+*/]/.test(value)) {
+        return value;
+      }
+
+      // no input block of "="
+      if (value === "=") {
+        return prevInBlock;
+      }
+      return prevInBlock + value;
     });
     setExpression((prevExpression) => {
-      if (/\d$/.test(prevExpression) || /\d/.test(value)) {
-        return prevExpression + value;
-      } else {
-        return;
+      // no operator before input number, exclude subtract
+      if (prevExpression === "" && /[+*/]/.test(value)) {
+        return "";
       }
+
+      // no input block begin with multiple zero
+      if (flagMultipleZero === true) {
+        return (prevExpression + value)
+          .replace(/\b0+(\d+)/g, "$1")
+          .replace(/\b0+/g, "0");
+      }
+
+      // no 2 decimal in a number block
+      if (flagMultipleDecimal === true) {
+        return (prevExpression + value).replace(/^0+|[-+*/]0+/, "");
+      }
+      //  3 operator
+      if (/[-+*/]-$/.test(prevExpression) && value === "-") {
+        return prevExpression;
+      }
+
+      if (/[-+*/]-$/.test(prevExpression) && /[-+*/]/.test(value)) {
+        return prevExpression.slice(0, -2) + value;
+      }
+
+      // only 1 operator allow, exclude "+-" "*-" "/-"
+      if (/[-+*/]$/.test(prevExpression) && /[+*/]/.test(value)) {
+        return prevExpression.slice(0, -1) + value;
+      }
+
+      // "--"
+      if (/-$/.test(prevExpression) && value === "-") {
+        return prevExpression + " " + value;
+      }
+
+      // display "=" and result in the expression line
+      if (value === "=" && !prevExpression.includes("=")) {
+        return prevExpression + value + eval(prevExpression);
+      }
+
+      // no 2 consecutive "=" input
+      if (value === "=" && prevExpression.includes("=")) {
+        return prevExpression;
+      }
+
+      // after "=", input an operator, the expression line will ONLY display result with that operator
+      if (prevExpression.includes("=") && /[-+*/]/.test(value)) {
+        return result + value;
+      }
+      return prevExpression + value;
     });
   };
   const calculate = () => {
     try {
-      setResult(eval(expression.replaceAll("=", "")));
+      if (!expression.includes("=")) {
+        setResult(eval(expression));
+      }
     } catch (error) {
-      console.log("Error!!! ", error);
+      console.log("Error: ", error);
       setResult("Error!!!");
     }
   };
@@ -86,7 +137,7 @@ function App() {
         <div className="cal__scr">
           <div className="cal__scr-expression">{expression}</div>
           <div id="display" className="cal__scr-result">
-            {input === 0 ? input : input === "=" ? result : inputBlock}
+            {expression === "" ? 0 : input === "=" ? result : inputBlock}
           </div>
         </div>
         <div className="cal__ctrl">
@@ -96,8 +147,8 @@ function App() {
               className="cal__ctrl-btn cal__ctrl-man"
               key={manipulator.id}
               id={manipulator.id}
-              onClick={() => {
-                handleInput(manipulator.value);
+              onClick={(e) => {
+                handleInput(e.target.textContent);
               }}
             >
               {manipulator.value}
@@ -110,8 +161,8 @@ function App() {
               className="cal__ctrl-btn cal__ctrl-num"
               key={num.id}
               id={num.id}
-              onClick={() => {
-                handleInput(num.value.toString());
+              onClick={(e) => {
+                handleInput(e.target.textContent);
               }}
             >
               {num.value}
@@ -123,8 +174,8 @@ function App() {
             className="cal__ctrl-btn cal__ctrl-man"
             id="equals"
             onClick={() => {
-              handleInput("=");
               calculate();
+              handleInput("=");
             }}
           >
             =
