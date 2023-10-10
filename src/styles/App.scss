@@ -86,6 +86,10 @@ body {
   font-size: 3rem;
   font-weight: 500;
   font-family: "Poppins", sans-serif;
+  min-width: 320px;
+  @include bp(sm) {
+    font-size: 2.5rem;
+  }
 }
 
 #root {
@@ -106,10 +110,6 @@ body {
   background-color: $black-17;
   border-radius: 3.9rem;
   transform: scale(0.8);
-
-  @include bp(md) {
-    padding: 1rem;
-  }
 
   &__scr {
     width: 100%;
@@ -165,13 +165,15 @@ body {
 
     &-man,
     &-num {
-      padding: 2.1rem;
       aspect-ratio: 1/1;
       height: 6.2rem;
       display: flex;
       justify-content: center;
       align-items: center;
       font-weight: inherit;
+      @include bp(sm) {
+        height: 4.8rem;
+      }
     }
     #zero,
     #clear {
