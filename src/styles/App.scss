@@ -6,8 +6,12 @@
 }
 
 // var
-$orange: #fa9c16;
-$grey: #6d6c6d;
+$orange: #ff9500;
+$grey-dark: #505050;
+$grey-med: #828282;
+$grey-light: #d4d4d2;
+$black-1c: #1c1c1c;
+$black-17: #17181a;
 
 // mixins
 @mixin bp($name) {
@@ -33,19 +37,36 @@ $grey: #6d6c6d;
 // common
 a,
 button {
+  font-family: inherit;
   &:hover {
     opacity: 0.7;
   }
+}
+
+.orange {
+  background-color: $orange;
+  color: $grey-light;
+}
+
+.grey-dark {
+  background-color: $grey-dark;
+  color: $grey-light;
+}
+
+.grey-light {
+  background-color: $grey-light;
+  color: $black-1c;
 }
 
 .copyright {
   display: block;
   color: white;
   width: 100%;
-  background-color: cadetblue;
+  background-color: $orange;
   text-align: center;
   position: fixed;
   bottom: 0;
+  font-size: 1.5rem;
 
   &__link {
     color: inherit;
@@ -58,7 +79,13 @@ button {
 // main
 html {
   overflow: hidden;
-  font-family: "Roboto", sans-serif;
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 3rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
 }
 
 #root {
@@ -73,20 +100,24 @@ html {
   margin: 0 auto;
   background-color: cadetblue;
   position: relative;
-  padding: 2rem;
+  padding: 4rem 3.3rem;
   border-radius: 10px;
   transform: translateY(-25px);
+  background-color: $black-17;
+  border-radius: 3.9rem;
+  transform: scale(0.8);
+
   @include bp(md) {
     padding: 1rem;
   }
 
   &__scr {
     width: 100%;
-    background-color: white;
     display: flex;
     flex-direction: column;
     padding: 0.2rem 0.4rem;
     border-radius: 10px;
+    min-height: 13rem;
     &-expression,
     &-result {
       text-align: end;
@@ -94,8 +125,14 @@ html {
       padding: 0.2rem;
     }
     &-expression {
-      font-size: 1rem;
-      min-height: 26px;
+      font-weight: 400;
+      font-size: 2.4rem;
+      color: $grey-med;
+      min-height: 4.15rem;
+    }
+    &-result {
+      font-size: 4.8rem;
+      color: $grey-light;
     }
   }
   &__ctrl {
@@ -106,7 +143,7 @@ html {
       "four five six add"
       "one two three equals"
       "zero zero decimal equals";
-    gap: 0.5rem;
+    gap: 2rem;
     margin-top: 1rem;
     &-btn {
       min-width: 4rem;
@@ -116,7 +153,7 @@ html {
       transition: transform 0.05s ease-in-out;
       border: none;
       color: white;
-      font-size: 1.2rem;
+      font-size: inherit;
       @include bp(md) {
         min-width: 3rem;
         min-height: 3rem;
@@ -126,17 +163,28 @@ html {
       }
     }
 
-    &-man {
-      background-color: $orange;
-    }
+    &-man,
     &-num {
-      background-color: $grey;
+      padding: 2.1rem;
+      aspect-ratio: 1/1;
+      height: 6.2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: inherit;
     }
+    #zero,
+    #clear {
+      aspect-ratio: unset;
+    }
+
     #clear {
       grid-area: clear;
+      @extend .grey-light;
     }
     #divide {
       grid-area: divide;
+      @extend .grey-light;
     }
     #multiply {
       grid-area: multiply;
@@ -149,9 +197,12 @@ html {
     }
     #equals {
       grid-area: equals;
+      aspect-ratio: unset;
+      height: unset;
     }
     #decimal {
       grid-area: decimal;
+      @extend .grey-dark;
     }
     #zero {
       grid-area: zero;

@@ -144,7 +144,7 @@ function App() {
           {/* manipulator */}
           {manipulators.map((manipulator) => (
             <button
-              className="cal__ctrl-btn cal__ctrl-man"
+              className="cal__ctrl-btn cal__ctrl-man orange"
               key={manipulator.id}
               id={manipulator.id}
               onClick={(e) => {
@@ -158,7 +158,7 @@ function App() {
           {/* numbers */}
           {numbers.map((num) => (
             <button
-              className="cal__ctrl-btn cal__ctrl-num"
+              className="cal__ctrl-btn cal__ctrl-num grey-dark"
               key={num.id}
               id={num.id}
               onClick={(e) => {
@@ -171,7 +171,7 @@ function App() {
 
           {/* calculate */}
           <button
-            className="cal__ctrl-btn cal__ctrl-man"
+            className="cal__ctrl-btn cal__ctrl-man orange"
             id="equals"
             onClick={() => {
               calculate();
@@ -182,7 +182,7 @@ function App() {
           </button>
           {/* clear */}
           <button
-            className="cal__ctrl-btn cal__ctrl-man"
+            className="cal__ctrl-btn cal__ctrl-man orange"
             id="clear"
             onClick={clear}
           >
