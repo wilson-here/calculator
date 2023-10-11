@@ -98,7 +98,7 @@ function App() {
 
       // display "=" and result in the expression line
       if (value === "=" && !prevExpression.includes("=")) {
-        return prevExpression + value + eval(prevExpression);
+        return prevExpression + value + parseFloat(eval(expression).toFixed(4));
       }
 
       // no 2 consecutive "=" input
@@ -116,7 +116,7 @@ function App() {
   const calculate = () => {
     try {
       if (!expression.includes("=")) {
-        setResult(eval(expression));
+        setResult(parseFloat(eval(expression).toFixed(4)));
       }
     } catch (error) {
       console.log("Error: ", error);
